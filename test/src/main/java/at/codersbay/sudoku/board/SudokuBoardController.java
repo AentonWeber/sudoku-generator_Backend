@@ -70,7 +70,7 @@ public class SudokuBoardController {
 
     @GetMapping("/save")
     public ResponseEntity<SudokuResponse> saveSudoku(@Param("save") Long id) {
-        System.out.println("ich test hier was!");
+        System.out.println("ich verstehe es nicht");
 
         return null;
     }
