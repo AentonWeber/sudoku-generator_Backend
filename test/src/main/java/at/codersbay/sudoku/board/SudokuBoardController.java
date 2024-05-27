@@ -68,4 +68,9 @@ public class SudokuBoardController {
         return ResponseEntity.ok(new SudokuResponse(isCorrect));
     }
 
+    @GetMapping("/save")
+    public ResponseEntity<SudokuResponse> saveSudoku(@Param("save") Long id) {
+        return null;
+    }
+
 }
