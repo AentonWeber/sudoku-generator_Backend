@@ -14,10 +14,10 @@ public class SudokuBoardService {
     private ArrayList<Set<Integer>> boxes;
     private int size;
     private int[][] board;
-    private Set<Integer> availableNumbers; // zum schauen ob zahl verfügbar sind!
+    private Set<Integer> availableNumbers;
     private int squareRootSize;
 
-    private SudokuBoardRepository sudokuBoardRepository;
+    private final SudokuBoardRepository sudokuBoardRepository;
 
     public SudokuBoardService(SudokuBoardRepository sudokuBoardRepository) {
         this.sudokuBoardRepository = sudokuBoardRepository;
@@ -62,7 +62,6 @@ public class SudokuBoardService {
         return SudokuBoardMapper.mapEntityToDTO(sudokuBoard);
     }
 
-
     private int boxPosition(int row, int column) {
         int boxRow = row / 3;
         int boxColumn = column / 3;
@@ -74,11 +73,11 @@ public class SudokuBoardService {
         result.removeAll(rows.get(row));
         result.removeAll(columns.get(column));
         result.removeAll(boxes.get(boxPosition(row, column)));
-        return !result.contains(num);
+        return result.contains(num);
     }
 
     private void setNumber(int row, int column, int num) {
-        if (!isValid(row, column, num)) {
+        if (isValid(row, column, num)) {
             saveNumber(row, column, num);
             board[row][column] = num;
         }
@@ -150,7 +149,7 @@ public class SudokuBoardService {
         }
 
         for (int num = 1; num <= availableNumbers.size(); num++) {
-            if (!isValid(row, col, num)) {
+            if (isValid(row, col, num)) {
                 board[row][col] = num;
                 saveNumber(row, col, num);
                 if (restFill(row, col + 1)) {
@@ -197,7 +196,7 @@ public class SudokuBoardService {
         deleteNumber(row, col, savedNumber);
         for (int i = 1; i <= 9; i++) {
 
-            if (!isValid(row, col, i)) {
+            if (isValid(row, col, i)) {
                 count++;
                 if (count > 1) {
                     setNumber(row, col, savedNumber);
@@ -207,7 +206,6 @@ public class SudokuBoardService {
         }
         return true;
     }
-
 
     public void resetBoard() {
         for (int i = 0; i < size; i++) {
@@ -236,21 +234,11 @@ public class SudokuBoardService {
         return boardOptional.map(SudokuBoardMapper::mapEntityToDTO).orElse(null);
     }
 
-    public boolean deleteSudoku(Long id) {
-        try {
-            sudokuBoardRepository.deleteById(id);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
     public List<Long> getAllBoardIds() {
         return sudokuBoardRepository.findAll().stream()
                 .map(SudokuBoard::getId)
                 .collect(Collectors.toList());
     }
-
 
     public boolean isValidSudoku(int[][] board) {
 
@@ -293,9 +281,4 @@ public class SudokuBoardService {
 
         return true;
     }
-
-
 }
-
-
-

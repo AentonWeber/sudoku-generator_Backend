@@ -14,7 +14,6 @@ public class SudokuBoardMapper {
         return sudokuBoard;
     }
 
-
     public static SudokuBoardDTO mapEntityToDTO(SudokuBoard sudokuBoard) {
         SudokuBoardDTO sudokuBoardDTO = new SudokuBoardDTO();
         sudokuBoardDTO.setId(sudokuBoard.getId());

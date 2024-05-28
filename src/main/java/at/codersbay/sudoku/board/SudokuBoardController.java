@@ -16,7 +16,7 @@ public class SudokuBoardController {
     private static final Logger LOG = Logger.getLogger(SudokuBoardController.class.getName());
 
 
-    private SudokuBoardService sudokuBoardService;
+    private final SudokuBoardService sudokuBoardService;
 
     public SudokuBoardController(SudokuBoardService sudokuBoardService) {
 
@@ -24,7 +24,7 @@ public class SudokuBoardController {
     }
 
     @GetMapping("/generate")
-    public ResponseEntity<SudokuBoardDTO> generateSudokoBoard() {
+    public ResponseEntity<SudokuBoardDTO> generateSudokuBoard() {
         LOG.info("generate");
 
         SudokuBoardDTO sudokuBoard = sudokuBoardService.createSudokuBoard(9);
@@ -43,17 +43,6 @@ public class SudokuBoardController {
         return ResponseEntity.ok(board);
     }
 
-    @GetMapping("/delete")
-    public ResponseEntity<String> deleteFromDB(@Param("id") Long id) {
-        LOG.info("delete");
-        if (sudokuBoardService.deleteSudoku(id)) {
-            return ResponseEntity.ok("Deleted successfully");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to delete");
-        }
-    }
-
-
     @GetMapping("/idList")
     public ResponseEntity<List<Long>> idListFromDB(@Param("id") Long id) {
         LOG.info("idList");
@@ -67,10 +56,4 @@ public class SudokuBoardController {
         boolean isCorrect = sudokuBoardService.isValidSudoku(request.getBoard());
         return ResponseEntity.ok(new SudokuResponse(isCorrect));
     }
-
-    @GetMapping("/save")
-    public ResponseEntity<SudokuResponse> saveSudoku(@Param("save") Long id) {
-        return null;
-    }
-
 }
