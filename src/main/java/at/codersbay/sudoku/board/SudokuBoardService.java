@@ -164,26 +164,35 @@ public class SudokuBoardService {
 
     private void digHoleNumber() {
         Random r = new Random();
+        boolean[][] grid = new boolean[size][size];
 
         int zeroFields = 0;
         int notPossible = 0;
 
-        while (zeroFields < (size * size) / 2 + 1) {
+        int fieldsVisited = 0;
 
+
+        while (zeroFields < 40) {
             int row = r.nextInt(size);
             int col = r.nextInt(size);
-            if (possibleDigHole(row, col, board[row][col])) {
-                board[row][col] = 0;
-                zeroFields++;
-            } else {
-                notPossible++;
 
-                if (notPossible > 1000) {
-                    resetBoard();
-                    zeroFields = 0;
-                    notPossible = 0;
-
+            if (!grid[row][col]) {
+                if (possibleDigHole(row, col, board[row][col])) {
+                    board[row][col] = 0;
+                    zeroFields++;
+                } else {
+                    notPossible++;
                 }
+                grid[row][col] = true;
+                fieldsVisited++;
+            }
+
+            if (notPossible > 500 || fieldsVisited == size * size) {
+                resetBoard();
+                zeroFields = 0;
+                notPossible = 0;
+                fieldsVisited = 0;
+                grid = new boolean[size][size];
             }
         }
     }
